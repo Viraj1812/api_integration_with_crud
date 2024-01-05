@@ -2,6 +2,8 @@ import 'package:api_integration_with_crud/model/todo_model.dart';
 import 'package:api_integration_with_crud/services/remote_service.dart';
 import 'package:api_integration_with_crud/ui/add_task_screen.dart';
 import 'package:api_integration_with_crud/ui/search_screen.dart';
+import 'package:api_integration_with_crud/ui/search_screen_by_date.dart';
+import 'package:api_integration_with_crud/utils/helper_methods.dart';
 import 'package:api_integration_with_crud/widgets/edit_dialog.dart';
 import 'package:api_integration_with_crud/widgets/todo_list_item.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +48,12 @@ class _HomeScreenState extends State<HomeScreen> {
               _navigateToSearchScreen(context);
             },
           ),
+          IconButton(
+            icon: const Icon(Icons.calendar_today),
+            onPressed: () {
+              _navigateToSearchScreenByDate(context);
+            },
+          ),
         ],
       ),
       body: Visibility(
@@ -88,6 +96,15 @@ class _HomeScreenState extends State<HomeScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => const SearchScreen(),
+      ),
+    );
+  }
+
+  void _navigateToSearchScreenByDate(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SearchScreenByDate(),
       ),
     );
   }
@@ -172,28 +189,8 @@ class _HomeScreenState extends State<HomeScreen> {
           todoList?[index] ?? todo,
         );
       } catch (e) {
-        _showToast(context, e.toString());
+        Utils.showToast(context, e.toString());
       }
     }
-  }
-
-  void _showToast(BuildContext context, String message) {
-    var snackbar = SnackBar(
-      content: Text(
-        message,
-        style: GoogleFonts.montserrat(color: Colors.white),
-      ),
-      duration: const Duration(seconds: 2),
-      shape: const BeveledRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8))),
-      backgroundColor: Colors.black,
-      behavior: SnackBarBehavior.floating,
-      elevation: 20,
-      showCloseIcon: true,
-      closeIconColor: Colors.red,
-      dismissDirection: DismissDirection.horizontal,
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackbar);
   }
 }

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:api_integration_with_crud/model/todo_model.dart';
 import 'package:api_integration_with_crud/services/remote_service.dart';
+import 'package:api_integration_with_crud/utils/helper_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -92,10 +93,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     v: 0,
                   );
                   await RemoteService().addTodo(newTask);
-                  _showToast(context, 'TODO Added Successfully!');
+                  Utils.showToast(context, 'TODO Added Successfully!');
                   Navigator.pop(context, newTask);
                 } else {
-                  _showToast(context, 'Please Enter the title');
+                  Utils.showToast(context, 'Please Enter the title');
                 }
               } catch (e) {
                 throw Exception(e);
@@ -118,25 +119,5 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     }
 
     return randomId;
-  }
-
-  void _showToast(BuildContext context, String message) {
-    var snackbar = SnackBar(
-      content: Text(
-        message,
-        style: GoogleFonts.montserrat(color: Colors.white),
-      ),
-      duration: const Duration(seconds: 2),
-      shape: const BeveledRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8))),
-      backgroundColor: Colors.black,
-      behavior: SnackBarBehavior.floating,
-      elevation: 20,
-      showCloseIcon: true,
-      closeIconColor: Colors.red,
-      dismissDirection: DismissDirection.horizontal,
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackbar);
   }
 }
