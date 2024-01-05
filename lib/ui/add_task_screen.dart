@@ -10,13 +10,13 @@ class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _AddTaskScreenState createState() => _AddTaskScreenState();
 }
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
   TextEditingController titleController = TextEditingController();
   bool isCompleted = false;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -42,69 +42,77 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           },
         ),
       ),
-      body: Column(
-        children: [
-          Card(
-            margin: const EdgeInsets.all(16),
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              margin: const EdgeInsets.all(8),
-              child: TextField(
-                controller: titleController,
-                decoration: const InputDecoration(
-                  hintText: 'Enter title',
-                  border: InputBorder.none,
+      body: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            Card(
+              margin: const EdgeInsets.all(16),
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                margin: const EdgeInsets.all(8),
+                child: TextFormField(
+                  controller: titleController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter title text';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    hintText: 'Enter title',
+                    border: InputBorder.none,
+                  ),
                 ),
               ),
             ),
-          ),
-          Card(
-            margin: const EdgeInsets.all(16),
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Completed'),
-                  Switch(
-                    value: isCompleted,
-                    onChanged: (value) {
-                      setState(() {
-                        isCompleted = value;
-                      });
-                    },
-                  ),
-                ],
+            Card(
+              margin: const EdgeInsets.all(16),
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Completed'),
+                    Switch(
+                      value: isCompleted,
+                      onChanged: (value) {
+                        setState(() {
+                          isCompleted = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () async {
-              try {
-                String randomId = generateRandomId();
-                if (titleController.text.isNotEmpty) {
-                  TODO newTask = TODO(
-                    id: randomId,
-                    todoName: titleController.text,
-                    isComplete: isCompleted,
-                    createdAt: DateTime.now(),
-                    updatedAt: DateTime.now(),
-                    v: 0,
-                  );
-                  await RemoteService().addTodo(newTask);
-                  Utils.showToast(context, 'TODO Added Successfully!');
-                  Navigator.pop(context, newTask);
-                } else {
-                  Utils.showToast(context, 'Please Enter the title');
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () async {
+                try {
+                  // Validate the form before adding a new task
+                  if (_formKey.currentState?.validate() ?? false) {
+                    String randomId = generateRandomId();
+                    TODO newTask = TODO(
+                      id: randomId,
+                      todoName: titleController.text,
+                      isComplete: isCompleted,
+                      createdAt: DateTime.now(),
+                      updatedAt: DateTime.now(),
+                      v: 0,
+                    );
+                    await RemoteService().addTodo(newTask);
+                    Utils.showToast(context, 'TODO Added Successfully!');
+                    Navigator.pop(context, newTask);
+                  }
+                } catch (e) {
+                  throw Exception(e);
                 }
-              } catch (e) {
-                throw Exception(e);
-              }
-            },
-            child: const Text('Add Todo'),
-          ),
-        ],
+              },
+              child: const Text('Add Todo'),
+            ),
+          ],
+        ),
       ),
     );
   }

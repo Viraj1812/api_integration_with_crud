@@ -37,7 +37,11 @@ class _EditTodoDialogState extends State<EditTodoDialog> {
             decoration: const InputDecoration(hintText: 'Enter edited title'),
             enabled: false,
           ),
+          const SizedBox(
+            height: 20,
+          ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('Completed'),
               Switch(
