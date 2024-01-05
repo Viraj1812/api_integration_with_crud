@@ -92,7 +92,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     v: 0,
                   );
                   await RemoteService().addTodo(newTask);
-                  // ignore: use_build_context_synchronously
+                  _showToast(context, 'TODO Added Successfully!');
                   Navigator.pop(context, newTask);
                 } else {
                   _showToast(context, 'Please Enter the title');

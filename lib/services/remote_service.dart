@@ -57,7 +57,7 @@ class RemoteService {
       final response = await http.put(
         Uri.parse('$baseUrl/$id'),
         headers: {'Content-Type': 'application/json'},
-        body: todosToJson([updatedTodo]),
+        body: jsonEncode(updatedTodo.toJson()),
       );
 
       if (response.statusCode != 200) {
@@ -67,6 +67,23 @@ class RemoteService {
     } catch (e) {
       print('Error: $e');
       throw Exception('Failed to edit TODO');
+    }
+  }
+
+  Future<Map<String, dynamic>> getTodoById(String id) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/$id'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        return {'code': 200, 'data': data};
+      } else if (response.statusCode == 404) {
+        return {'code': 404, 'message': 'No post with that id.'};
+      } else {
+        return {'code': response.statusCode, 'message': 'Failed to get TODO'};
+      }
+    } catch (error) {
+      return {'code': 500, 'message': 'Internal Server Error'};
     }
   }
 }

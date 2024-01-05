@@ -1,6 +1,7 @@
 import 'package:api_integration_with_crud/model/todo_model.dart';
 import 'package:api_integration_with_crud/services/remote_service.dart';
 import 'package:api_integration_with_crud/ui/add_task_screen.dart';
+import 'package:api_integration_with_crud/widgets/edit_dialog.dart';
 import 'package:api_integration_with_crud/widgets/todo_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -50,7 +51,9 @@ class _HomeScreenState extends State<HomeScreen> {
             if (todo != null) {
               return TodoListItem(
                 todo: todo,
-                onEdit: () {},
+                onEdit: () {
+                  onEdit(todo, index);
+                },
                 onDelete: () {
                   onDelete(todo);
                 },
@@ -127,5 +130,52 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       todoList?.remove(todo);
     });
+  }
+
+  void onEdit(TODO todo, int index) async {
+    final result = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return EditTodoDialog(
+          initialTitle: todoList?[index].todoName ?? '',
+          initialIsCompleted: todoList?[index].isComplete ?? false,
+        );
+      },
+    );
+
+    if (result != null) {
+      setState(() {
+        todoList?[index].isComplete = result['isCompleted'];
+      });
+
+      try {
+        await RemoteService().editTodoById(
+          todoList?[index].id ?? '',
+          todoList?[index] ?? todo,
+        );
+      } catch (e) {
+        _showToast(context, e.toString());
+      }
+    }
+  }
+
+  void _showToast(BuildContext context, String message) {
+    var snackbar = SnackBar(
+      content: Text(
+        message,
+        style: GoogleFonts.montserrat(color: Colors.white),
+      ),
+      duration: const Duration(seconds: 2),
+      shape: const BeveledRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8))),
+      backgroundColor: Colors.black,
+      behavior: SnackBarBehavior.floating,
+      elevation: 20,
+      showCloseIcon: true,
+      closeIconColor: Colors.red,
+      dismissDirection: DismissDirection.horizontal,
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
   }
 }
