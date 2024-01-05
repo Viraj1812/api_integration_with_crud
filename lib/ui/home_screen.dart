@@ -1,6 +1,7 @@
 import 'package:api_integration_with_crud/model/todo_model.dart';
 import 'package:api_integration_with_crud/services/remote_service.dart';
 import 'package:api_integration_with_crud/ui/add_task_screen.dart';
+import 'package:api_integration_with_crud/ui/search_screen.dart';
 import 'package:api_integration_with_crud/widgets/edit_dialog.dart';
 import 'package:api_integration_with_crud/widgets/todo_list_item.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,14 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         centerTitle: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              _navigateToSearchScreen(context);
+            },
+          ),
+        ],
       ),
       body: Visibility(
         visible: isLoaded,
@@ -70,6 +79,15 @@ class _HomeScreenState extends State<HomeScreen> {
           _navigateToAddTodoScreen();
         },
         child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  void _navigateToSearchScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SearchScreen(),
       ),
     );
   }

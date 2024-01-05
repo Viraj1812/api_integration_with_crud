@@ -18,40 +18,43 @@ class TodoListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(
-        todo.todoName,
-        style:
-            GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.bold),
-      ),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Created: ${_formatDateTime(todo.createdAt)}'),
-          Text('Updated: ${_formatDateTime(todo.updatedAt)}'),
-        ],
-      ),
-      leading: GestureDetector(
-        onTap: onToggle,
-        child: Icon(
-          todo.isComplete == true
-              ? Icons.check_box
-              : Icons.check_box_outline_blank,
-          color: todo.isComplete == true ? Colors.green : Colors.grey,
+    return Card(
+      margin: const EdgeInsets.all(8),
+      child: ListTile(
+        title: Text(
+          todo.todoName,
+          style:
+              GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-      ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: onEdit,
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Created: ${_formatDateTime(todo.createdAt)}'),
+            Text('Updated: ${_formatDateTime(todo.updatedAt)}'),
+          ],
+        ),
+        leading: GestureDetector(
+          onTap: onToggle,
+          child: Icon(
+            todo.isComplete == true
+                ? Icons.check_box
+                : Icons.check_box_outline_blank,
+            color: todo.isComplete == true ? Colors.green : Colors.grey,
           ),
-          IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: onDelete,
-          ),
-        ],
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: onEdit,
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: onDelete,
+            ),
+          ],
+        ),
       ),
     );
   }

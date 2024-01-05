@@ -70,13 +70,13 @@ class RemoteService {
     }
   }
 
-  Future<Map<String, dynamic>> getTodoById(String id) async {
+  Future<Map<String, dynamic>>? getTodoById(String id) async {
     try {
       final response = await http.get(Uri.parse('$baseUrl/$id'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
-        return {'code': 200, 'data': data};
+        return {'code': 200, 'data': data['data']};
       } else if (response.statusCode == 404) {
         return {'code': 404, 'message': 'No post with that id.'};
       } else {
