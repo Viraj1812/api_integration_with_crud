@@ -40,6 +40,7 @@ dependencies:
   http: ^1.1.2
   flutter_date_pickers: ^0.4.2
   intl: ^0.18.1
+  easy_debounce: ^2.0.3
 
 dev_dependencies:
   flutter_test:

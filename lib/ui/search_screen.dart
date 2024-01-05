@@ -1,6 +1,7 @@
 import 'package:api_integration_with_crud/model/todo_model.dart';
 import 'package:api_integration_with_crud/services/remote_service.dart';
 import 'package:api_integration_with_crud/utils/helper_methods.dart';
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -37,6 +38,13 @@ class _SearchScreenState extends State<SearchScreen> {
             TextFormField(
               controller: idController,
               decoration: const InputDecoration(labelText: 'Enter TODO ID'),
+              onChanged: (value) {
+                EasyDebounce.debounce(
+                  'searchDebounce',
+                  const Duration(milliseconds: 500),
+                  () => _searchTodo(),
+                );
+              },
             ),
             const SizedBox(height: 10),
             ElevatedButton(
